@@ -22,6 +22,28 @@ export const GraphPlotter: React.FC = () => {
   useEffect(() => {
     drawGraph();
   }, [functions, xMin, xMax, yMin, yMax]);
+  const evaluateFunction = (expression: string, x: number): number => {
+  try {
+    let expr = expression
+      .toLowerCase()
+      .replace(/\bpi\b/g, 'Math.PI')      // constant
+      .replace(/\be\b(?![a-z])/g, 'Math.E') // avoid matching 'exp'
+      .replace(/\^/g, '**')               // exponentiation
+      .replace(/\bsin\(/g, 'Math.sin(')
+      .replace(/\bcos\(/g, 'Math.cos(')
+      .replace(/\btan\(/g, 'Math.tan(')
+      .replace(/\blog\(/g, 'Math.log10(')
+      .replace(/\bln\(/g, 'Math.log(')
+      .replace(/\bsqrt\(/g, 'Math.sqrt(')
+      .replace(/\babs\(/g, 'Math.abs(')
+      .replace(/\bx\b/g, `(${x})`);       // preserve precedence
+
+    const y = eval(expr);
+    return isFinite(y) ? y : NaN;
+  } catch {
+    return NaN;
+  }
+};
 
   const addFunction = () => {
     if (!newFunction.trim()) return;
