@@ -9,5 +9,49 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AhmedNawaz QnA Chatbot</title>
+  <style>
+    body { font-family: sans-serif; background: #0c0c0c; color: white; padding: 20px; }
+    #response { margin-top: 20px; background: #1c1c1c; padding: 10px; border-radius: 8px; }
+    input, button { padding: 8px; margin-top: 10px; border-radius: 4px; }
+    button { background: #0066ff; color: white; border: none; }
+  </style>
+</head>
+<body>
+  <h2>💬 Ask me anything about AhmedNawaz!</h2>
+  <input type="text" id="question" placeholder="Type your question..." />
+  <button onclick="askQuestion()">Submit</button>
+  <div id="response"></div>
+
+  <script>
+    async function askQuestion() {
+      const userQuestion = document.getElementById("question").value;
+      const endpoint = "https://AhmedNawazLanguage.cognitiveservices.azure.com/language/:query-knowledgebases?api-version=2021-10-01";
+      const apiKey = "YOUR_API_KEY_HERE"; // Replace with your actual key
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Ocp-Apim-Subscription-Key": apiKey
+        },
+        body: JSON.stringify({
+          question: userQuestion,
+          top: 1,
+          projectName: "AhmedNawaz",
+          deploymentName: "Deploy knowledge base"
+        })
+      });
+
+      const result = await response.json();
+      document.getElementById("response").innerText = result.answers?.[0]?.answer || "❌ No response found.";
+    }
+  </script>
+</body>
+</html>
+ </body>
 </html>
